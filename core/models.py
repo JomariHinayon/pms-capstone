@@ -54,7 +54,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
@@ -66,7 +66,7 @@ class Order(models.Model):
     comments = models.TextField(blank=True, null=True) 
 
     def __str__(self):
-        return f"Request by {self.user.username} for {self.product.title}"
+        return f"Request by {self.user.username} for {self.product}"
     
 class OrderRefund(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
