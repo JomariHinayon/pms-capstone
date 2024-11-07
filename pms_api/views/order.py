@@ -1,11 +1,11 @@
-from rest_framework import generics
+from rest_framework import generics, serializers, status
 from rest_framework import status as res_status
 from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 
 
 from pms_api.serializer import OrderRefundSerializer, OrderSerializer
-from core.models import OrderRefund, Order
+from core.models import OrderRefund, Order, Product
 
 @extend_schema(tags=["Order Refund"])
 class OrderRefundListCreateView(generics.ListCreateAPIView):
@@ -21,6 +21,34 @@ class OrderRefundDetailView(generics.RetrieveUpdateDestroyAPIView):
 class OrderListCreateView(generics.ListCreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Extract 'name' and 'description' fields from request data
+        data = request.data.copy()
+        product_name = data.get('product_name') 
+        quantity = data.get('quantity') # Product title is provided as 'name'
+        description = data.get('description')
+
+        # Find the product by title
+        product = Product.objects.filter(title=product_name).first()
+        if not product:
+            return Response(
+                {"error": f"Product with title '{product_name}' does not exist."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Create the order instance and add the product
+        order = Order.objects.create(
+            user=request.user,
+            comments=description,
+            quantity=quantity,
+            last_update_by=request.user
+        )
+        order.product.add(product)
+
+        # Serialize and return the created order
+        serializer = self.get_serializer(order)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @extend_schema(tags=["Order"])
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
