@@ -7,6 +7,13 @@ from config import settings
 USER_TYPE_CHOICES = [
     ('procurement_admin', 'Procurement Admin'),
     ('supplier', 'Supplier'),
+    ('user', 'User'),
+    ('municipal_admin', 'Municipal Admin')
+]
+
+USER_POSITION = [
+    ('dean', 'Dean'),
+    ('head', 'Head'),
 ]
 
 ORDER_STATUS_CHOICES = [
@@ -32,11 +39,15 @@ PAYMENT_METHOD_CHOICES = [
 class Account(AbstractUser):
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
-    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='supplier')
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='user')
+    position = models.CharField(max_length=20, choices=USER_POSITION,blank=True, null=True, default='dean')
+    id_number = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    business_permit = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.username
-    
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -54,19 +65,20 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='order_by' ) 
     product = models.ManyToManyField(Product)  
     quantity = models.PositiveIntegerField()  
     request_date = models.DateTimeField(auto_now_add=True)  
     status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')  
     approval_date = models.DateTimeField(blank=True, null=True)  
     comments = models.TextField(blank=True, null=True) 
+    last_update_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='last_update_by', null=True, blank=True)
 
     def __str__(self):
-        return f"Request by {self.user.username} for {self.product.title}"
+        return f"Request by {self.user.username} for {self.product}"
     
 class OrderRefund(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 

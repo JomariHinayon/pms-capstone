@@ -7,8 +7,18 @@ from django.contrib.auth import authenticate
 from drf_spectacular.utils import extend_schema
 from rest_framework.authtoken.views import ObtainAuthToken
 
-from pms_api.serializer import AccountSerializer
+from pms_api.serializer import AccountSerializer, AccountDetailsSerializer
 from core.models import Account
+
+@extend_schema(tags=["Account"])
+class AccountListView(generics.ListCreateAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountDetailsSerializer
+
+@extend_schema(tags=["Account"])
+class AccountDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountDetailsSerializer
 
 @extend_schema(tags=["Authentication"])
 class AccountRegistrationView(generics.CreateAPIView):
@@ -49,7 +59,8 @@ class AccountLoginView(APIView):
 
             return Response({
                 'message': 'Login successful',
-                'token': token.key
+                'token': token.key,
+                'user_type': user.user_type
             }, status=status.HTTP_200_OK)
         else:
             return Response({
