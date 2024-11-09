@@ -1,7 +1,7 @@
 from django.db import models
-
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from decimal import Decimal
+
 from config import settings
 
 USER_TYPE_CHOICES = [
@@ -72,10 +72,13 @@ class Order(models.Model):
     product = models.ManyToManyField(Product)  
     quantity = models.PositiveIntegerField()  
     request_date = models.DateTimeField(auto_now_add=True)  
-    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')  
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
+    final_status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
     approval_date = models.DateTimeField(blank=True, null=True)  
     comments = models.TextField(blank=True, null=True) 
     last_update_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='last_update_by', null=True, blank=True)
+    invoice_number = models.CharField(max_length=100, blank=True, null=True, default="")
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)  # Store total value
 
     def __str__(self):
         return f"Request by {self.user.username} for {self.product}"

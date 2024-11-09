@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from .views import AccountRegistrationView, AccountLoginView, ProductDetailView, ProductListCreateView, \
     OrderRefundListCreateView, OrderDetailView, OrderRefundDetailView, OrderListCreateView, ObtainAuthTokenView, \
-    PaymentDetailView, PaymentListCreateView, AccountDetailsView, AccountListView
+    PaymentDetailView, PaymentListCreateView, AccountDetailsView, AccountListView, CategoryListCreateView, CategoryDetailView
 
 urlpatterns = [
     # auth
@@ -27,4 +27,8 @@ urlpatterns = [
     # account
     path('accounts/<int:pk>/', AccountDetailsView.as_view(), name='account_details'),
     path('accounts/', AccountListView.as_view(), name='account_list'),
+
+    # category
+    path('category/<int:pk>/', CategoryDetailView.as_view(), name='category_details'),
+    path('category/', CategoryListCreateView.as_view(), name='category_list'),
 ]

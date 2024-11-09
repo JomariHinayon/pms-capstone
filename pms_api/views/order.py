@@ -2,20 +2,25 @@ from rest_framework import generics, serializers, status
 from rest_framework import status as res_status
 from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
-
+from django.utils import timezone
 
 from pms_api.serializer import OrderRefundSerializer, OrderSerializer
-from core.models import OrderRefund, Order, Product
+from core.models import OrderRefund, Order, Product, Account
 
 @extend_schema(tags=["Order Refund"])
 class OrderRefundListCreateView(generics.ListCreateAPIView):
     queryset = OrderRefund.objects.all()
     serializer_class = OrderRefundSerializer
 
+    def get_queryset(self):
+        # Filter payments to only return those related to the current user
+        return OrderRefund.objects.filter(user=self.request.user)
+
 @extend_schema(tags=["Order Refund"])
 class OrderRefundDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = OrderRefund.objects.all()
     serializer_class = OrderRefundSerializer
+
 
 @extend_schema(tags=["Order"])
 class OrderListCreateView(generics.ListCreateAPIView):
@@ -28,6 +33,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
         product_name = data.get('product_name') 
         quantity = data.get('quantity') # Product title is provided as 'name'
         description = data.get('description')
+        category = data.get('category')
 
         # Find the product by title
         product = Product.objects.filter(title=product_name).first()
@@ -61,10 +67,16 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         # Only update status and last_update_by
         status = request.data.get('status', None)
+        final_status = request.data.get('final_status', None)
         last_update_by = request.user  
 
         if status is not None:
             order.status = status
+
+        if final_status is not None:
+            order.final_status = final_status
+            order.approval_date = timezone.now() 
+
         order.last_update_by = last_update_by
 
         # Save the updated order

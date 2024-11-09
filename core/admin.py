@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
+
 from .models import Account, Category, Product, Order, OrderRefund, Payment
 
 class AccountAdmin(admin.ModelAdmin):
@@ -10,11 +12,18 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'stock', 'category', 'image')
+    list_display = ('title', 'price', 'stock', 'category', 'image_tag')
     list_filter = ('category',)
 
+    def image_tag(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" width="100" height="100" />')
+        return 'No image'
+    
+    image_tag.short_description = 'Image'
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'quantity', 'status', 'request_date', 'get_products')
+    list_display = ('id', 'user', 'quantity', 'status', 'final_status', 'request_date', 'get_products')
     
     def get_products(self, obj):
         return ", ".join([product.title for product in obj.product.all()]) 
