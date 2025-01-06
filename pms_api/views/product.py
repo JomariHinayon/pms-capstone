@@ -21,7 +21,9 @@ class ProductListCreateView(generics.ListCreateAPIView):
         else:
             category, created = Category.objects.get_or_create(name="No Category")
 
-        serializer.save(category=category)
+        product = serializer.save(category=category)
+        product.user = self.request.user
+        product.save()
         
         # Optionally, you can return a custom response if needed, or the default will apply
         return Response(serializer.data, status=status.HTTP_201_CREATED)
