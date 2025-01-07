@@ -158,3 +158,28 @@ SPECTACULAR_SETTINGS = {
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# CORS settings
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = (
+            'http://localhost:3000',
+                'http://127.0.0.1:3000',
+                    'http://52.62.183.28',
+                    )
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+CSRF_TRUSTED_ORIGINS = [
+            'http://52.62.183.28',
+                'https://52.62.183.28', 
+                ]
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = "static/"
+if DEBUG:
+    STATIC_ROOT = "static/"
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
+else:
+    STATIC_ROOT = os.path.join("/var/www/pms/", "staticfiles")
+    STATICFILES_DIRS = ["/var/www/pms/"]

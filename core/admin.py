@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
+from django.contrib.auth.admin import UserAdmin
+
 
 from .models import Account, Category, Product, Order, OrderRefund, Payment
 
-class AccountAdmin(admin.ModelAdmin):
+class AccountAdmin(UserAdmin):
     list_display = ('username', 'email', 'user_type', 'mobile_number', 'contact_number', 'is_active', 'is_staff')
     search_fields = ('username', 'email', 'user_type')
     list_filter = ('user_type', 'is_active', 'is_staff')
@@ -12,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'stock', 'category', 'image_tag', 'barcode')
+    list_display = ('title', 'is_available', 'stock', 'category', 'image_tag', 'barcode')
     list_filter = ('category',)
 
     def image_tag(self, obj):
