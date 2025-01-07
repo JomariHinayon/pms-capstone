@@ -2,13 +2,14 @@ from django.urls import path, include
 
 from .views import AccountRegistrationView, AccountLoginView, ProductDetailView, ProductListCreateView, \
     OrderRefundListCreateView, OrderDetailView, OrderRefundDetailView, OrderListCreateView, ObtainAuthTokenView, \
-    PaymentDetailView, PaymentListCreateView, AccountDetailsView, AccountListView, CategoryListCreateView, CategoryDetailView
+    PaymentDetailView, PaymentListCreateView, AccountDetailsView, AccountListView, CategoryListCreateView, CategoryDetailView, ForgotPasswordView
 
 urlpatterns = [
     # auth
     path('get-token/', ObtainAuthTokenView.as_view(), name='api_get_token'),
     path('register/', AccountRegistrationView.as_view(), name='api_register'),
     path('login/', AccountLoginView.as_view(), name='login'),
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
 
     # product
     path('products/', ProductListCreateView.as_view(), name='product_list_create'),

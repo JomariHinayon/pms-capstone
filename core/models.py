@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from decimal import Decimal
+from django.utils.timezone import now
 
 from config import settings
 
@@ -45,6 +46,7 @@ class Account(AbstractUser):
     id_number = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     business_permit = models.CharField(max_length=255, blank=True, null=True)
+    reset_token = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.username
@@ -66,6 +68,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
     barcode = models.CharField(max_length=50, blank=True, null=True)
     is_available = models.BooleanField(default=True) 
+    created_at = models.DateTimeField(default=now)
 
     def __str__(self):
         return self.title

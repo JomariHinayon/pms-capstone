@@ -89,3 +89,11 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
+
+
+class ForgotPasswordSerializer(serializers.ModelSerializer):
+    email = serializers.CharField
+
+    class Meta:
+        model = Account
+        fields = ['email']

@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_available', 'stock', 'category', 'image_tag', 'barcode')
+    list_display = ('title', 'is_available', 'stock', 'category', 'image_tag', 'barcode', 'created_at')
     list_filter = ('category',)
 
     def image_tag(self, obj):
