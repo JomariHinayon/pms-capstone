@@ -106,7 +106,7 @@ class ForgotPasswordView(APIView):
         send_mail(
             'Password Reset Request',
             f'Use the following token to reset your password: {reset_token}',
-            'hinayonjomari@gmail.com',
+            'michealnoya159@gmail.com',
             [email],
             fail_silently=False,
         )

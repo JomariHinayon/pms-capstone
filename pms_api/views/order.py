@@ -69,7 +69,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
         send_mail(
             subject,
             message,
-            "hinayonjomari@gmail.com",  # Replace with your email
+            "michealnoya159@gmail.com",  # Replace with your email
             recipient_list + [request.user.email],
             fail_silently=False,
         )
@@ -118,7 +118,7 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
         send_mail(
             subject,
             message,
-            "hinayonjomari@gmail.com",  # Replace with your email
+            "michealnoya159@gmail.com",  # Replace with your email
             recipient_list + [request.user.email],
             fail_silently=False,
         )
