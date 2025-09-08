@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-#knf_$%mag5b&02d+-c*u)w2zi(d&eks48n*1gblqb49a5gkg-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2']
 
 
 # Application definition
@@ -160,7 +160,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS settings
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True  # Allow all origins during development
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
@@ -183,10 +184,21 @@ if DEBUG:
 else:
     STATIC_ROOT = os.path.join("/var/www/pms/", "staticfiles")
     STATICFILES_DIRS = ["/var/www/pms/"]
+    
+
+# CORS Settings
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = tuple(
+    os.getenv('CORS_ORIGIN_WHITELIST', 
+    'http://localhost:3000,http://127.0.0.1:3000,http://52.62.183.28').split(',')
+)
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS',
+    'http://52.62.183.28,https://52.62.183.28').split(',')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "michealnoya159@gmail.com"
-EMAIL_HOST_PASSWORD = "kphp hwup iebx nmzq" # Replace with your email password
+EMAIL_HOST_PASSWORD = "kphp hwup iebx nmzq" 
